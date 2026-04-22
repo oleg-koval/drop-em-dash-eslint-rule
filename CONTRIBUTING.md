@@ -4,6 +4,12 @@ Thanks for helping improve `eslint-plugin-drop-em-dash`.
 
 ## Development
 
+If your **global** `gitignore` ignores `.cursor/` (common), new or updated Cursor skills under `.cursor/skills/` must be staged with:
+
+```bash
+git add -f .cursor/skills/drop-em-dash-eslint/SKILL.md
+```
+
 1. Clone the repository and install dependencies:
 
    ```bash
