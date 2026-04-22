@@ -13,7 +13,11 @@ This is useful when you want ASCII-friendly copy in code, comments, and string l
 
 ### Enable GitHub Pages
 
-In the GitHub repository: **Settings → Pages → Build and deployment → Source → GitHub Actions**. The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the `docs/` folder on pushes to `main` (or `master`).
+The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) **creates the GitHub Pages site** (if needed) with **`build_type: workflow`**, then uploads `docs/` and deploys. You should not need a manual one-time UI toggle anymore.
+
+If you ever disabled Pages or used a branch source, open **Settings → Pages → Source → GitHub Actions**, or delete/recreate the site and push again so the workflow can run the bootstrap step.
+
+After the first successful deploy, the site URL is **https://oleg-koval.github.io/drop-em-dash-eslint-rule/** (replace owner/repo if you fork).
 
 ## Requirements
 

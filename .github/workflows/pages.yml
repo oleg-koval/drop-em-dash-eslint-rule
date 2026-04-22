@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -20,6 +20,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      # configure-pages calls GET /repos/{owner}/{repo}/pages, which 404s until a Pages site
+      # exists. Creating the site via API (workflow build) matches "Source: GitHub Actions" in UI.
+      - name: Ensure GitHub Pages uses GitHub Actions (workflow)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          BRANCH="${{ github.event.repository.default_branch }}"
+          if ! gh api "repos/${REPO}/pages" --silent >/dev/null 2>&1; then
+            echo "Pages: creating site (workflow build)…"
+            jq -n --arg branch "$BRANCH" '{build_type:"workflow",source:{branch:$branch,path:"/"}}' \
+              | gh api -X POST "repos/${REPO}/pages" --input -
+          else
+            BT="$(gh api "repos/${REPO}/pages" --jq .build_type)"
+            if [ "$BT" != "workflow" ]; then
+              echo "Pages: switching build type to workflow…"
+              gh api -X PUT "repos/${REPO}/pages" -f build_type=workflow
+            else
+              echo "Pages: already configured for GitHub Actions (workflow)."
+            fi
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
