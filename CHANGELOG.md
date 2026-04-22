@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/oleg-koval/drop-em-dash-eslint-rule/compare/v1.0.0...v1.0.1) (2026-04-22)
+
+
+### Bug Fixes
+
+* **readme:** replace em dashes with ASCII hyphens ([261029c](https://github.com/oleg-koval/drop-em-dash-eslint-rule/commit/261029c3a1d57375e68a24d520c182ecb1fb5f38))
+
 # 1.0.0 (2026-04-22)
 
 

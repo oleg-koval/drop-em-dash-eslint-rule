@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-drop-em-dash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ESLint rule to disallow the em dash (—) and replace it with a hyphen (-).",
   "keywords": [
     "eslint",
