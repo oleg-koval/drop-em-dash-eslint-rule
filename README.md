@@ -1,84 +1,88 @@
 # eslint-plugin-drop-em-dash
 
+> Catch the em dash. The one character that screams “this was written by an LLM” (or pasted from a doc editor). Autofix it to a plain hyphen, in CI, everywhere.
+
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-drop-em-dash.svg)](https://www.npmjs.com/package/eslint-plugin-drop-em-dash)
 [![CI](https://github.com/oleg-koval/drop-em-dash-eslint-rule/actions/workflows/ci.yml/badge.svg)](https://github.com/oleg-koval/drop-em-dash-eslint-rule/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ESLint](https://img.shields.io/badge/ESLint-9%2B-4b32c3?logo=eslint&logoColor=white)](https://eslint.org)
 
-ESLint plugin with a single rule: **disallow the Unicode em dash (`—`, U+2014)** in source text and **autofix** it to a regular **hyphen-minus (`-`, U+002D)**.
-
-This is useful when you want ASCII-friendly copy in code, comments, and string literals, or when tooling or fonts make em dashes easy to paste by mistake.
-
-**Docs site (GitHub Pages):** https://oleg-koval.github.io/drop-em-dash-eslint-rule/
-
-### Cursor / agent skill
-
-This repo ships a **Cursor skill** so agents discover how to install and configure the plugin:
-
-- **In-repo:** [`.cursor/skills/drop-em-dash-eslint/SKILL.md`](.cursor/skills/drop-em-dash-eslint/SKILL.md) (see also root [`AGENTS.md`](AGENTS.md)).
-- **All projects:** copy that folder to `~/.cursor/skills/drop-em-dash-eslint` (or symlink) so Cursor loads it globally. Skills are discovered from the `description` frontmatter when the task matches em dash / ESLint typography.
-
-### Enable GitHub Pages
-
-The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) **creates the GitHub Pages site** (if needed) with **`build_type: workflow`**, then uploads `docs/` and deploys. You should not need a manual one-time UI toggle anymore.
-
-If you ever disabled Pages or used a branch source, open **Settings → Pages → Source → GitHub Actions**, or delete/recreate the site and push again so the workflow can run the bootstrap step.
-
-After the first successful deploy, the site URL is **https://oleg-koval.github.io/drop-em-dash-eslint-rule/** (replace owner/repo if you fork).
-
-## Requirements
-
-- Node.js `^18.18.0 || ^20.9.0 || >=21.1.0`
-- ESLint `>=8.57.0` (flat config examples target ESLint 9)
-
-## Installation
-
 ```bash
-npm install --save-dev eslint eslint-plugin-drop-em-dash
+npm i -D eslint eslint-plugin-drop-em-dash
+```
+
+```js
+// eslint.config.js
+import dropEmDash from 'eslint-plugin-drop-em-dash';
+
+export default [...dropEmDash.configs['flat/recommended']];
 ```
 
 ```bash
-pnpm add -D eslint eslint-plugin-drop-em-dash
+eslint . --fix
 ```
 
-```bash
-yarn add -D eslint eslint-plugin-drop-em-dash
-```
+Done. No more `—` sneaking into your commits, comments, strings, or JSX copy.
+
+This rule flags a **Unicode character (U+2014)** — it does not infer authorship. Plenty of humans use em dashes; the point here is **consistency and ASCII** in codebases that want it.
+
+## Why you need this
+
+The Unicode em dash (`—`, U+2014) is a known punctuation tell of AI-generated text. It also leaks in constantly from:
+
+- ChatGPT / Claude / Gemini output pasted into code and docs
+- Notion, Google Docs, Word, Slack (they auto-convert `--` to `—`)
+- Designers pasting marketing copy into JSX
+- macOS “smart punctuation” on by default
+
+Once in your repo, it causes real problems:
+
+- **Grep-unfriendly.** `grep --` patterns will not find `—`. Refactors can skip it.
+- **Noisy diffs.** Mixed dash styles break reviewers’ flow.
+- **Inconsistent rendering** across terminals, logs, emails, and error messages.
+- **Copy drift.** Marketing and UI strings drift toward LLM-default punctuation.
+- **Not ASCII.** Legacy tooling, logs, SMS, CSV, or email headers get weird.
+
+This plugin is the smallest possible fix: **one rule, one character, autofix on save.** No config sprawl, no opinions about en dashes, no typography debate for your JS/TS tree — just ship ASCII where you lint.
+
+## What it does
+
+- Flags every literal `—` (U+2014) in files ESLint parses: code, comments, string literals, JSX text.
+- Autofixes each one to `-` (U+002D, hyphen-minus).
+- **Ignores the en dash** (U+2013) and other dash-like characters on purpose, so you can adopt it without a style war.
 
 ## Usage
 
-### ESLint flat config (`eslint.config.js`, ESLint 8.21+ / 9+)
-
-Import the plugin and enable the rule (or use the built-in recommended preset):
+### Flat config (ESLint 9+)
 
 ```js
 import dropEmDash from 'eslint-plugin-drop-em-dash';
 
-export default [
-  ...dropEmDash.configs['flat/recommended'],
-];
+export default [...dropEmDash.configs['flat/recommended']];
 ```
 
-Manual wiring:
+Manual:
 
 ```js
 import dropEmDash from 'eslint-plugin-drop-em-dash';
 
 export default [
   {
-    plugins: {
-      'drop-em-dash': dropEmDash,
-    },
-    rules: {
-      'drop-em-dash/drop-em-dash': 'error',
-    },
+    plugins: { 'drop-em-dash': dropEmDash },
+    rules: { 'drop-em-dash/drop-em-dash': 'error' },
   },
 ];
 ```
 
 ### Legacy `.eslintrc.*`
 
-Add the plugin and rule:
+```json
+{
+  "extends": ["plugin:drop-em-dash/recommended"]
+}
+```
+
+Or wire the rule explicitly:
 
 ```json
 {
@@ -89,39 +93,44 @@ Add the plugin and rule:
 }
 ```
 
-Or extend the shared preset:
+### Other package managers
 
-```json
-{
-  "extends": ["plugin:drop-em-dash/recommended"]
-}
+```bash
+pnpm add -D eslint eslint-plugin-drop-em-dash
 ```
 
-## Rule
+```bash
+yarn add -D eslint eslint-plugin-drop-em-dash
+```
 
-### `drop-em-dash/drop-em-dash`
+## Example
 
-- **Problems reported:** any literal em dash character (`—`, `\u2014`) anywhere in a file ESLint parses (code, comments, and string contents).
-- **Autofix:** replaces each em dash with `-` (hyphen-minus).
-- **Suggested command-line fix:** `eslint . --fix`
-
-#### Why only the em dash?
-
-The rule targets **U+2014 EM DASH** only. Other dash-like characters (for example the en dash **U+2013**) are intentionally not flagged so you can adopt a narrower policy first.
-
-## Examples
+Before:
 
 ```js
-// Invalid — em dash in a comment
-const title = 'Pricing — overview';
+const title = 'Pricing — overview'; // best plan — for teams
 ```
 
-After `--fix`:
+After `eslint . --fix`:
 
 ```js
-// Invalid - em dash in a comment
-const title = 'Pricing - overview';
+const title = 'Pricing - overview'; // best plan - for teams
 ```
+
+## Requirements
+
+- Node.js `^18.18.0 || ^20.9.0 || >=21.1.0`
+- ESLint `>=8.57.0`
+
+## Cursor / AI agent skill
+
+This repo ships a **Cursor skill** so coding agents auto-discover how to install and wire the plugin: [`.cursor/skills/drop-em-dash-eslint/SKILL.md`](.cursor/skills/drop-em-dash-eslint/SKILL.md). Copy that folder to `~/.cursor/skills/drop-em-dash-eslint` (or symlink) to enable globally — see root [`AGENTS.md`](AGENTS.md). Fitting, since agents and doc tools are a common source of stray em dashes in code.
+
+## Docs
+
+Full docs mirror: **https://oleg-koval.github.io/drop-em-dash-eslint-rule/**
+
+The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) bootstraps Pages (`build_type: workflow`) if needed, then deploys `docs/`. If Pages was disabled or pointed at a branch, use **Settings → Pages → Source → GitHub Actions**, or push again after the bootstrap step runs.
 
 ## Testing
 
@@ -129,36 +138,55 @@ const title = 'Pricing - overview';
 npm test
 ```
 
-- **Unit tests** exercise the rule with ESLint `RuleTester`.
-- **Integration tests** run the real `ESLint` API against `tests/fixtures/` (including a file that contains a literal em dash) and assert both diagnostics and autofix output.
+- **Unit tests** — ESLint `RuleTester` for the rule.
+- **Integration tests** — real `ESLint` API over `tests/fixtures/` (literal em dash) for diagnostics and autofix.
 
 ## Releases (maintainers)
 
-Pushes to **`main`** run [`.github/workflows/release.yml`](.github/workflows/release.yml), which executes [**semantic-release**](https://semantic-release.gitbook.io/) after tests pass.
+Pushes to **`main`** run [`.github/workflows/release.yml`](.github/workflows/release.yml) → [**semantic-release**](https://semantic-release.gitbook.io/) after tests pass (Conventional Commits; release commits use `[skip ci]`).
 
-- Version bumps, `CHANGELOG.md`, `package.json`, `package-lock.json`, Git tags, GitHub Releases, and **npm publish** are handled from commit messages using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:` → minor, `fix:` → patch, `BREAKING CHANGE` / `!` → major).
-- Release commits include **`[skip ci]`** so the workflow does not recurse on its own changelog bump commit.
-
-### Required GitHub secret
-
-Add **`NPM_TOKEN`** in the repository **Settings → Secrets and variables → Actions**:
-
-- npmjs.com → **Access Tokens** → create an **Automation** (classic) token, or a **granular** token with permission to publish `eslint-plugin-drop-em-dash`.
-- Paste the token value into **`NPM_TOKEN`**.
-
-`GITHUB_TOKEN` is provided automatically for GitHub Releases and for pushing the version bump commit back to `main`.
+Add repository secret **`NPM_TOKEN`** (npm automation or granular publish token). `GITHUB_TOKEN` covers GitHub Releases and the version bump push.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please read the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
 
-## Related projects
-
-Patterns for authoring ESLint plugins:
+## Related
 
 - [ESLint — Create Plugins](https://eslint.org/docs/latest/extend/plugins)
-- Community examples: [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn), [`eslint-plugin-n`](https://github.com/eslint-community/eslint-plugin-n) (structure, CI, docs)
+- Community examples: [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn), [`eslint-plugin-n`](https://github.com/eslint-community/eslint-plugin-n)
+
+---
+
+## Launch copy (optional)
+
+**Tagline (12 words):** The em dash is AI’s fingerprint. One ESLint rule removes it everywhere.
+
+**X / Twitter:**
+
+> Shipped: `eslint-plugin-drop-em-dash`
+>
+> One rule. Bans the em dash (`—`). Autofixes to `-`.
+>
+> Why you care: it’s the #1 tell of LLM-written text, and every paste from Notion/Docs/ChatGPT sneaks it into your code.
+>
+> `npm i -D eslint-plugin-drop-em-dash`
+
+**HN title ideas:**
+
+- `Show HN: ESLint rule that deletes the em dash (AI's punctuation fingerprint)`
+- `Show HN: One ESLint rule to kill the "ChatGPT em dash" in your codebase`
+
+**Product Hunt:** Catch the em dash. The punctuation tell of AI-written copy.
+
+**LinkedIn (short):** Every LLM loves the em dash. So do Notion, Docs, and Slack’s autocorrect. They all slip `—` into your codebase where `-` belongs. `grep` misses it, diffs get noisy, copy drifts toward generic. This ESLint plugin catches and autofixes it: `eslint-plugin-drop-em-dash`.
+
+**Share loops:** before/after of `eslint . --fix` on a messy PR; a one-liner people can run and screenshot; blog angle e.g. “The em dash is the new Lorem Ipsum” with a link to the plugin.
+
+**Risks:** Editorial teams may love em dashes in prose — this tool targets **linted source**; it’s opt-in per repo. Do not claim it “detects AI”; it **detects a character**.
+
+**Next (you):** record a short GIF of `eslint . --fix` and embed it near the top of this README; line up HN / X / cross-posts when you ship.
