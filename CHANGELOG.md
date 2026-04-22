@@ -1,3 +1,15 @@
+# 1.0.0 (2026-04-22)
+
+
+### Bug Fixes
+
+* **ci:** bootstrap GitHub Pages workflow source before configure-pages ([ee92efb](https://github.com/oleg-koval/drop-em-dash-eslint-rule/commit/ee92efb0b1447b26bca7003171a7439ddbc45fef))
+
+
+### Features
+
+* add eslint-plugin-drop-em-dash with CI, Pages, and npm releases ([fccb9a8](https://github.com/oleg-koval/drop-em-dash-eslint-rule/commit/fccb9a88d9ed7770c5ce1e13ab5cbc86a3794d34))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
