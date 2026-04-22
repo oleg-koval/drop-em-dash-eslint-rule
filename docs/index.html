@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eslint-plugin-drop-em-dash</title>
+    <meta
+      name="description"
+      content="ESLint plugin: disallow em dash (—) and autofix to hyphen (-)."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b1020;
+        --fg: #e8ecff;
+        --muted: #a7b0d8;
+        --card: #121a33;
+        --accent: #7dd3fc;
+        --border: #243055;
+        --code-bg: #0f172a;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f7fb;
+          --fg: #0f172a;
+          --muted: #475569;
+          --card: #ffffff;
+          --accent: #0369a1;
+          --border: #e2e8f0;
+          --code-bg: #f1f5f9;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+        background: radial-gradient(1200px 600px at 20% -10%, #1d2a64 0%, var(--bg) 55%);
+        color: var(--fg);
+        line-height: 1.6;
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 48px 20px 72px;
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 16px;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .badges img {
+        height: 20px;
+      }
+      p.lead {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 70ch;
+      }
+      section {
+        background: color-mix(in oklab, var(--card) 92%, transparent);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin: 18px 0;
+      }
+      h2 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+      }
+      pre {
+        margin: 0;
+        padding: 14px 16px;
+        border-radius: 10px;
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        overflow: auto;
+        font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+      }
+      a {
+        color: var(--accent);
+        text-decoration-thickness: 0.08em;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 18px;
+        margin-top: 10px;
+        font-weight: 600;
+      }
+      footer {
+        margin-top: 36px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1><code>eslint-plugin-drop-em-dash</code></h1>
+        <div class="badges" aria-label="Package badges">
+          <a href="https://www.npmjs.com/package/eslint-plugin-drop-em-dash"
+            ><img
+              src="https://img.shields.io/npm/v/eslint-plugin-drop-em-dash.svg"
+              alt="npm version"
+          /></a>
+          <a href="https://github.com/oleg-koval/drop-em-dash-eslint-rule/blob/main/LICENSE"
+            ><img src="https://img.shields.io/npm/l/eslint-plugin-drop-em-dash.svg" alt="License"
+          /></a>
+        </div>
+      </header>
+
+      <p class="lead">
+        Flag the Unicode em dash (<span lang="en">—</span>, U+2014) anywhere in parsed source and
+        autofix to a plain hyphen (<code>-</code>).
+      </p>
+
+      <div class="links">
+        <a href="https://github.com/oleg-koval/drop-em-dash-eslint-rule">GitHub repository</a>
+        <a href="https://www.npmjs.com/package/eslint-plugin-drop-em-dash">npm package</a>
+        <a href="https://github.com/oleg-koval/drop-em-dash-eslint-rule/blob/main/README.md"
+          >Full README</a
+        >
+      </div>
+
+      <section>
+        <h2>Install</h2>
+        <pre><code>npm install --save-dev eslint eslint-plugin-drop-em-dash</code></pre>
+      </section>
+
+      <section>
+        <h2>Flat config (ESLint 9)</h2>
+        <pre><code>import dropEmDash from 'eslint-plugin-drop-em-dash';
+
+export default [
+  ...dropEmDash.configs['flat/recommended'],
+];</code></pre>
+      </section>
+
+      <section>
+        <h2>Fix on disk</h2>
+        <pre><code>npx eslint . --fix</code></pre>
+      </section>
+
+      <footer>
+        Documentation mirror for GitHub Pages. Source of truth lives in the repository README and
+        <code>lib/</code> sources.
+      </footer>
+    </main>
+  </body>
+</html>
