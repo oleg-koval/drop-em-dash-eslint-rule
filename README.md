@@ -11,6 +11,13 @@ This is useful when you want ASCII-friendly copy in code, comments, and string l
 
 **Docs site (GitHub Pages):** https://oleg-koval.github.io/drop-em-dash-eslint-rule/
 
+### Cursor / agent skill
+
+This repo ships a **Cursor skill** so agents discover how to install and configure the plugin:
+
+- **In-repo:** [`.cursor/skills/drop-em-dash-eslint/SKILL.md`](.cursor/skills/drop-em-dash-eslint/SKILL.md) (see also root [`AGENTS.md`](AGENTS.md)).
+- **All projects:** copy that folder to `~/.cursor/skills/drop-em-dash-eslint` (or symlink) so Cursor loads it globally. Skills are discovered from the `description` frontmatter when the task matches em dash / ESLint typography.
+
 ### Enable GitHub Pages
 
 The workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) **creates the GitHub Pages site** (if needed) with **`build_type: workflow`**, then uploads `docs/` and deploys. You should not need a manual one-time UI toggle anymore.
