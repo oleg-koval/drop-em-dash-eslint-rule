@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # configure-pages calls GET /repos/{owner}/{repo}/pages, which 404s until a Pages site
       # exists. Creating the site via API (workflow build) matches "Source: GitHub Actions" in UI.
