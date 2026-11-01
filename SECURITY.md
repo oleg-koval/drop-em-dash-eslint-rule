@@ -1,17 +1,21 @@
-# Security policy
+# Security Policy
 
-## Supported versions
+## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x     | :white_check_mark: |
+| Version        | Supported           |
+| -------------- | ------------------- |
+| Latest minor   | Yes                 |
+| Previous minor | Security fixes only |
+| Older          | No                  |
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
-If you believe you have found a security vulnerability, please open a **private**
-security advisory via GitHub (Repository → Security → Advisories) or email the
-maintainer with enough detail to reproduce the issue.
+**Please do not open a public GitHub issue for security vulnerabilities.**
 
-This project is a small ESLint plugin with no network surface in normal use; most
-reports are expected to be about supply-chain or documentation issues rather than
-remote exploits. Reports are still welcome.
+Email **oleg@bizcuit.nl** with:
+
+1. A description of the vulnerability and its potential impact
+2. Steps to reproduce or a proof-of-concept
+3. Any suggested fixes (optional but appreciated)
+
+You will receive an acknowledgement within 48 hours and a resolution timeline within 7 days.
